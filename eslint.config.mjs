@@ -1,7 +1,8 @@
 import { FlatCompat } from '@eslint/eslintrc';
-import prettierConfig from 'eslint-config-prettier';
+import pluginTypeScript from '@typescript-eslint/eslint-plugin';
 import pluginPrettier from 'eslint-plugin-prettier';
 import { dirname } from 'path';
+import prettier from 'prettier';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -11,25 +12,25 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
+const prettierConfig = (await prettier.resolveConfig(__dirname)) ?? {};
+
 const eslintConfig = [
   ...compat.extends('next/core-web-vitals'),
 
   {
     files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
-      parser: await import('@typescript-eslint/parser').then((m) => m.default),
+      parser: (await import('@typescript-eslint/parser')).default,
       parserOptions: {
         project: './tsconfig.json',
       },
     },
-    rules: {
-      '@typescript-eslint/semi': ['error', 'always'],
+    plugins: {
+      '@typescript-eslint': pluginTypeScript,
     },
-  },
-
-  {
     rules: {
       semi: ['error', 'always'],
+      trailingComma: 'none',
     },
   },
 
@@ -38,18 +39,9 @@ const eslintConfig = [
       prettier: pluginPrettier,
     },
     rules: {
-      'prettier/prettier': [
-        'error',
-        {
-          semi: true,
-          singleQuote: true,
-          jsxSingleQuote: true,
-        },
-      ],
+      'prettier/prettier': ['error', prettierConfig],
     },
   },
-
-  prettierConfig,
 ];
 
 export default eslintConfig;

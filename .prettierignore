@@ -13,3 +13,7 @@ node_modules
  test-results
  junit.xml
  docs
+
+ dist
+*.config.js
+*.config.cjs

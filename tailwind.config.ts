@@ -4,6 +4,6 @@ import tailwindAnimate from 'tailwindcss-animate';
 const config: Config = {
   content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {},
-  plugins: [tailwindAnimate],
+  plugins: [tailwindAnimate]
 };
 export default config;
